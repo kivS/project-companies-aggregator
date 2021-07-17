@@ -1,4 +1,4 @@
+# My Investor assistant
 
-
-
-- Source: https://www.nasdaq.com/market-activity/stocks/screener
+## Instructions
+- To download all the public listed companies:  https://www.nasdaq.com/market-activity/stocks/screener

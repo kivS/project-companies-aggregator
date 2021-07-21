@@ -29,7 +29,8 @@ if __name__ == '__main__':
         print('No tickers, nothing to do...')
         exit()
 
-    print(f'Processing {len(tickers)} items..')
+    tickers_size = len(tickers)
+    print(f'Processing {tickers_size} items..')
 
     for index, item in enumerate(tickers, start=1):
 
@@ -38,7 +39,7 @@ if __name__ == '__main__':
             print(f'Sleeping for {sleep_time}s...')
             time.sleep(sleep_time)
 
-        print(f'processing: {item["symbol"]}')
+        print(f'processing: {item["symbol"]}. item {index}/{tickers_size}')
         try:
             ticker_description = get_ticker_description(item['symbol'])
         except Exception as err:

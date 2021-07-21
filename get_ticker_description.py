@@ -48,5 +48,5 @@ if __name__ == '__main__':
             continue     
         else:
             q = cursor.execute(f'UPDATE stonks SET description = ? WHERE symbol = ?;', (ticker_description, item['symbol']))
-            print(f'Inserted {q.rowcount} rows')
             con.commit()
+            print(f'Inserted {q.rowcount} rows')

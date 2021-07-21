@@ -23,7 +23,7 @@ if __name__ == '__main__':
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
-    tickers = cursor.execute('SELECT symbol from stonks WHERE description is null').fetchall()
+    tickers = cursor.execute('SELECT symbol from stonks WHERE description is null ORDER BY RANDOM()').fetchall()
 
     if bool(tickers) is False:
         print('No tickers, nothing to do...')

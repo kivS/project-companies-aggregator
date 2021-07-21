@@ -34,7 +34,8 @@ if __name__ == '__main__':
 
     for index, item in enumerate(tickers, start=1):
 
-        if index % 10 == 0:
+        # every random from 5 to 10 items let's chill for a random amount of seconds
+        if index % round(random.uniform(5, 10)) == 0:
             sleep_time = round(random.uniform(0.5, 2.0), 2)
             print(f'Sleeping for {sleep_time}s...')
             time.sleep(sleep_time)

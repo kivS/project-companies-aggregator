@@ -20,8 +20,7 @@ df.rename(columns={'ipo year': 'ipo_year'}, inplace=True)
 df['extraction_date'] = extraction_datetime
 df['is_public'] = True
 
-# in order to append only new rows into the stonks table we need to create a temp table and check if there's duplicates
-con.execute('CREATE TEMPORARY TABLE IF NOT EXISTS stocks_temp (symbol TEXT)')
+# create a temp table to hold the new data that'll be diffed against the final table
 df.to_sql('stonks_temp', con, if_exists='replace', index=False, dtype={'ipo_year': 'INTEGER'})
 con.execute('''
     INSERT INTO stonks(symbol, name, country, ipo_year, sector, industry, is_public, extraction_date)

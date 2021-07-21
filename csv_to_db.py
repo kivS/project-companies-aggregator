@@ -7,6 +7,9 @@ import pandas as pd
 from datetime import datetime
 
 con = sqlite3.connect('db.sqlite3')
+con.row_factory = sqlite3.Row
+cursor = con.cursor()
+
 extraction_datetime = datetime.now()
 stocks_file = 'stocks.csv'
 
@@ -22,7 +25,7 @@ df['is_public'] = True
 
 # create a temp table to hold the new data that'll be diffed against the final table
 df.to_sql('stonks_temp', con, if_exists='replace', index=False, dtype={'ipo_year': 'INTEGER'})
-con.execute('''
+q = cursor.execute('''
     INSERT INTO stonks(symbol, name, country, ipo_year, sector, industry, is_public, extraction_date)
     SELECT 
         stonks_temp.symbol, 
@@ -42,5 +45,4 @@ con.execute('''
 con.execute('DROP TABLE IF EXISTS stonks_temp')
 con.commit()
 
-
-print('done')
+print(f'done. {q.rowcount} rows added')

@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
 '''
     Script that will read a csv file with a list of stocks and populate/append into the sqlite database.
 '''
+
 
 import sqlite3
 import pandas as pd

@@ -9,4 +9,6 @@ CREATE TABLE IF NOT EXISTS stonks(
     is_public BOOLEAN,
     description TEXT,
     extraction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 )
+

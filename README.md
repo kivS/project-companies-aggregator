@@ -1,4 +1,4 @@
-# My Investor assistant
+# Discover what companies are working on what problems
 
 ## Instructions
 - Download all the public listed companies csv file and save it as stocks.csv:  https://www.nasdaq.com/market-activity/stocks/screener

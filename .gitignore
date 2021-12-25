@@ -2,5 +2,5 @@
 logs/
 vendor/
 .env.php
-.env.py
+env.py
 tailwind

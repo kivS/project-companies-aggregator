@@ -5,16 +5,23 @@ Sync companies from db to meilisearch.
 - Updates existing companies' tags
 '''
 
+
+import sys
+import os
 import sqlite3
 import meilisearch
 import uuid
 import json
+# root project dir
+sys.path.append(os.path.abspath("/var/www/project-companies-aggregator"))
+from env import * # local env file
 
-client = meilisearch.Client('http://127.0.0.1:7700')
+
+client = meilisearch.Client(MEILISEARCH_CLIENT_URL)
 # An index is where the documents are stored.
-index = client.index('companies-aggregator')
+index = client.index(MEILISEARCH_APP_INDEX)
 
-con = sqlite3.connect('/var/www/project-companies-aggregator/db.sqlite3')
+con = sqlite3.connect(DB_PATH)
 con.row_factory = sqlite3.Row
 cursor = con.cursor()
 

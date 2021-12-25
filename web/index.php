@@ -6,10 +6,9 @@ use MeiliSearch\Client;
 
 
 if(isset($_GET['problem'])){
-    $client = new Client(MEILISEARCH_CLIENT_URL);
-
     try{
-        $index = $client->index('companies-aggregator');
+        $client = new Client(MEILISEARCH_CLIENT_URL);
+        $index = $client->index(MEILISEARCH_APP_INDEX);
         $search = $index->search($_GET['problem']);
         // echo print_r($search->getHits());
         echo print_r($search->getRaw());

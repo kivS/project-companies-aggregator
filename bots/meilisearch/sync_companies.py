@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Sync companies from db to meilisearch.
 

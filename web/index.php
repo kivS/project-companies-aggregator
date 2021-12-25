@@ -1,4 +1,26 @@
 <?php
+require_once(__DIR__.'/../.env.php');
+require_once __DIR__ . '/vendor/autoload.php';
+use MeiliSearch\Client;
+
+
+
+if(isset($_GET['problem'])){
+    $client = new Client(MEILISEARCH_CLIENT_URL);
+
+    try{
+        $index = $client->index('companies-aggregator');
+        $search = $index->search($_GET['problem']);
+        // echo print_r($search->getHits());
+        echo print_r($search->getRaw());
+
+    }catch (Exception $e){
+        // echo $e->getMessage();
+        // echo $e->getTraceAsString();
+        $_GET['error'] =  $e->getMessage();
+        exit();
+    }
+}
 
 ?>
 
@@ -36,15 +58,16 @@
     <h1>Discover what companies are working on what problems</h1>
     <form action="" method="get">
         <input type="search" list="problems-completion" name="problem" autocomplete="off" placeholder="water, energy, climate change, etc...">
-
-        <datalist id="problems-completion">
-            <option value="Water">
-            <option value="Energy">
-            <option value="Climate Change">
-            <option value="Health">
-            <option value="Housing">
-        </datalist>
     </form>
+    
+    <?php if(isset($_GET['problem'])){ ?>
+        <?php if(isset($_GET['error'])){ ?>
+            <p>Error: <?= $_GET['error']; ?></p>
+        <?php }; ?>
+        <div>
+            <p>Search for: <?= $_GET['problem']; ?></p>
+        </div>
+    <?php }; ?>
 </body>
 
 </html>

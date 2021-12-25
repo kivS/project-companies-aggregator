@@ -1,0 +1,1 @@
+define("MEILISEARCH_URL", "" );

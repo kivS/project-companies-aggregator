@@ -27,6 +27,7 @@ df['is_public'] = True
 
 # create a temp table to hold the new data that'll be diffed against the final table
 df.to_sql('stonks_temp', con, if_exists='replace', index=False, dtype={'ipo_year': 'INTEGER'})
+
 q = cursor.execute('''
     INSERT INTO stonks(symbol, name, country, ipo_year, sector, industry, is_public, extraction_date)
     SELECT 

@@ -17,3 +17,19 @@
 ### Configs
 
 - See all configs: `GET: http://127.0.0.1:7700/indexes/companies-aggregator/settings`
+
+- Create companies aggregator index:
+```bash
+wget --no-check-certificate --quiet \
+  --method POST \
+  --timeout=0 \
+  --header 'Cache-Control: no-cache' \
+  --header 'Accept: */*' \
+  --header 'Accept-Encoding: gzip, deflate' \
+  --header 'Connection: keep-alive' \
+  --body-data '{
+    "uid": "companies-aggregator",
+    "primaryKey": "company_uid"  
+}' \
+   'http://127.0.0.1:7700/indexes/'
+```

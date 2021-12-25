@@ -55,6 +55,7 @@ if(isset($_GET['problem'])){
 
 <body>
     <h1>Discover what companies are working on what problems</h1>
+    
     <form action="" method="get">
         <input type="search" list="problems-completion" name="problem" autocomplete="off" placeholder="water, energy, climate change, etc...">
     </form>

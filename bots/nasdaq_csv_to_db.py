@@ -19,7 +19,7 @@ cursor = con.cursor()
 extraction_datetime = datetime.now()
 
 
-df: pd.DataFrame = pd.read_csv(STOCKS_CSV_PATH, usecols=['Symbol', 'Name', 'Country', 'IPO Year', 'Sector', 'Industry'])
+df: pd.DataFrame = pd.read_csv(NASDAQ_STOCKS_CSV_PATH, usecols=['Symbol', 'Name', 'Country', 'IPO Year', 'Sector', 'Industry'])
 
 # lowercase all the columns
 df.columns = [x.lower() for x in df.columns]

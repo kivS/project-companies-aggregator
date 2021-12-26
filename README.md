@@ -35,3 +35,19 @@ wget --no-check-certificate --quiet \
 }' \
    'http://127.0.0.1:7700/indexes/'
 ```
+
+- Choose what fields can be searched:
+```bash
+wget --no-check-certificate --quiet \
+  --method POST \
+  --timeout=0 \
+  --header 'Cache-Control: no-cache' \
+  --header 'Accept: */*' \
+  --header 'Accept-Encoding: gzip, deflate' \
+  --header 'Connection: keep-alive' \
+  --body-data '[
+    "tags"
+
+]' \
+   'http://127.0.0.1:7700/indexes/companies-aggregator/settings/searchable-attributes'
+```

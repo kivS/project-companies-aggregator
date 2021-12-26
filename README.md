@@ -1,9 +1,18 @@
 # Discover what companies are working on what problems
 
-## TODO
-- https://github.com/meilisearch/MeiliSearch
 
-## 
+## Dependencies
+
+### PHP
+
+- composer
+
+### Python
+
+- requests
+- BeautifulSoup
+- meilisearch
+
 
 
 ## Instructions

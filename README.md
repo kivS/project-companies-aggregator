@@ -3,6 +3,8 @@
 ## TODO
 - https://github.com/meilisearch/MeiliSearch
 
+## 
+
 
 ## Instructions
 - Download all the public listed companies csv file and save it as stocks.csv:  https://www.nasdaq.com/market-activity/stocks/screener

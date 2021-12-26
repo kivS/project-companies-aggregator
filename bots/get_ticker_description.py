@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
+import os
+import sys
 import random
 import time
 import requests
 from bs4 import BeautifulSoup
 import sqlite3
+# root project dir
+sys.path.append(os.path.abspath("/var/www/project-companies-aggregator"))
+from env import * # local env file
 
 
 def get_ticker_description(ticker_symbol) -> str:
@@ -21,7 +26,7 @@ def get_ticker_description(ticker_symbol) -> str:
     return description.get_text()
 
 if __name__ == '__main__':
-    con = sqlite3.connect('db.sqlite3')
+    con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
 

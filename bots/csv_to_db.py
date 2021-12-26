@@ -3,20 +3,23 @@
     Script that will read a csv file with a list of stocks and populate/append into the sqlite database.
 '''
 
-
+import os
+import sys
 import sqlite3
 import pandas as pd
 from datetime import datetime
+# root project dir
+sys.path.append(os.path.abspath("/var/www/project-companies-aggregator"))
+from env import * # local env file
 
-con = sqlite3.connect('db.sqlite3')
+con = sqlite3.connect(DB_PATH)
 con.row_factory = sqlite3.Row
 cursor = con.cursor()
 
 extraction_datetime = datetime.now()
-stocks_file = 'stocks.csv'
 
 
-df: pd.DataFrame = pd.read_csv(stocks_file, usecols=['Symbol', 'Name', 'Country', 'IPO Year', 'Sector', 'Industry'])
+df: pd.DataFrame = pd.read_csv(STOCKS_CSV_PATH, usecols=['Symbol', 'Name', 'Country', 'IPO Year', 'Sector', 'Industry'])
 
 # lowercase all the columns
 df.columns = [x.lower() for x in df.columns]

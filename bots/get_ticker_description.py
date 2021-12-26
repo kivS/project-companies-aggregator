@@ -39,6 +39,7 @@ if __name__ == '__main__':
     tickers_size = len(tickers)
     print(f'Processing {tickers_size} items..')
 
+    total_rows_inserted = 0
     for index, item in enumerate(tickers, start=1):
 
         # every random from 5 to 10 items let's chill for a random amount of seconds
@@ -56,4 +57,6 @@ if __name__ == '__main__':
         else:
             q = cursor.execute(f'UPDATE stonks SET description = ? WHERE symbol = ?;', (ticker_description, item['symbol']))
             con.commit()
-            print(f'Inserted {q.rowcount} rows')
+            total_rows_inserted += q.rowcount
+            
+    print(f'Inserted {total_rows_inserted} rows')

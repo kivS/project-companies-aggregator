@@ -45,7 +45,7 @@ for company in companies:
 
     document = {}
     document['company_uid'] = company['uid'] if company['uid'] else uid
-    document['name'] = company['name']
+    document['name'] = company['clean_name']
     document['symbol'] = company['symbol']
     document['tags'] = json.loads(company['tags'])
     # add/replace document in meilisearch

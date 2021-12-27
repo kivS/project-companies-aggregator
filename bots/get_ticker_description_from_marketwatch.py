@@ -13,7 +13,7 @@ from env import * # local env file
 
 
 def get_ticker_description(ticker_symbol) -> str:
-    r = requests.get(f'https://www.marketwatch.com/investing/stock/{ticker_symbol}/company-profile')
+    r = requests.get(f'https://www.marketwatch.com/investing/stock/{ticker_symbol}/company-profile', timeout=10)
     if not r.ok:
         raise Exception(f'{ticker_symbol} not found on marketwatch: {r.reason}')
 

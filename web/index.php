@@ -31,7 +31,8 @@ Email: {$email}
         'form_params' => [
             'chat_id' => TELEGRAM_MY_CHAT_ID,
             'text' => $message,
-        ]
+        ],
+        'timeout' => 10,
     ]);
 
     

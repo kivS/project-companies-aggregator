@@ -70,7 +70,7 @@ if (isset($_GET['problem'])) {
     <link rel="stylesheet" href="/assets/main.css">
 </head>
 
-<body>
+<body class="bg-red">
     <h1>Discover what companies are working on what problems</h1>
 
     <form action="" method="get">

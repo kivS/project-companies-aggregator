@@ -161,7 +161,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
         <div x-cloak x-show="feedbackModalShow" aria-labelledby=" modal-title" role="dialog" aria-modal="true" class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <!-- Background overlay, show/hide based on modal state. -->
-                <div x-show="feedbackModalShow"  x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                <div x-show="feedbackModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
                 <!-- This element is to trick the browser into centering the modal contents. -->
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -229,6 +229,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
     <script>
         async function sendUserFeedback(e) {
 
+            // send button is disabled to prevent multiple clicks
+            e.submitter.disabled = true;
+
             // send request
             let request = await fetch('/send-feedback', {
                 method: 'POST',
@@ -238,6 +241,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
 
             document.querySelector('#feedback-success-message').classList.remove('hidden');
             e.target.reset();
+
+            // let's enable back the send button
+            e.submitter.disabled = false;
 
         };
     </script>

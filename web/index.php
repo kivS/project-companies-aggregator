@@ -41,7 +41,7 @@ Email: {$email}
 }
 
 
-if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
+if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
         $client = new Client(MEILISEARCH_CLIENT_URL);
         $index = $client->index(MEILISEARCH_APP_INDEX);
@@ -91,7 +91,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    <input type="search" tabindex="0" minlength="3" name="problem" autocomplete="off" placeholder="water, energy, climate change, etc..." class="rounded-xl w-full text-center block pl-10">
+                    <input type="search" tabindex="0" minlength="2" name="problem" autocomplete="off" placeholder="water, energy, climate change, etc..." class="rounded-xl w-full text-center block pl-10">
                 </div>
             </form>
 

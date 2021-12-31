@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] == '/send-f
     $client = new GuzzleClient();
 
     $message = "
-User feedback for [companies aggregator project]
+User feedback for [" . PROJECT_URL . "]
 Email: {$email}
 
 {$text}

@@ -60,3 +60,9 @@ wget --no-check-certificate --quiet \
 ]' \
    'http://127.0.0.1:7700/indexes/companies-aggregator/settings/searchable-attributes'
 ```
+
+- tailwind vscode auto-complete:
+
+```bash
+npm install --no-save --no-package-lock tailwindcss  @tailwindcss/forms
+```

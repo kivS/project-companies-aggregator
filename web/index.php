@@ -200,8 +200,6 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
                                 <div class="mt-2">
 
-                                    <input type="hidden" name="email" value="<?= $user['email']; ?>">
-
                                     <div class="mt-4">
                                         <label for="email" class="sr-only">Email</label>
                                         <input type="email" name="email" id="email" required placeholder="your@email.com" class="shadow-sm focus:ring-zinc-500 focus:border-ring-zinc-500 block w-full sm:text-sm border-gray-300 rounded-md">

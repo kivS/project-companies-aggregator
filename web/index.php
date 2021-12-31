@@ -48,6 +48,8 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
         $search = $index->search($_GET['problem']);
         $search_results = $search->getRaw();
 
+        $pluralized_match_number = $search_results['nbHits'] == 1 ? 'match' : 'matches';
+
         // echo print_r($search->getHits());
         // echo print_r($search->getRaw());
     } catch (Exception $e) {
@@ -77,7 +79,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
 <body class="bg-slate-200" x-data="{ feedbackModalShow: false}">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
-            <h1 class="font-bold text-2xl mt-7 text-center">Discover what public companies are working on what problems</h1>
+            <a href="/" tabindex="-1">
+                <h1 class="font-bold text-2xl mt-7 text-center">Discover what public companies are working on what problems</h1>
+            </a>
 
             <form action="" method="get" class="w-full flex justify-center">
                 <div class="relative w-3/4">
@@ -87,7 +91,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    <input type="search" minlength="3" name="problem" autocomplete="off" placeholder="water, energy, climate change, etc..." class="rounded-xl w-full text-center block pl-10">
+                    <input type="search" tabindex="0" minlength="3" name="problem" autocomplete="off" placeholder="water, energy, climate change, etc..." class="rounded-xl w-full text-center block pl-10">
                 </div>
             </form>
 
@@ -99,7 +103,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
 
                 <?php if (isset($search_results) && $search_results['nbHits'] > 0) { ?>
                     <div class="place-self-center sm:place-self-start mb-20 mt-5">
-                        <div class="m-2 text-gray-500"> <span class="font-semibold"> <?= $search_results['nbHits']; ?> </span> matches for: <span class="font-semibold"> <?= $_GET['problem']; ?> </span> </div>
+                        <div class="m-2 text-gray-500"> <span class="font-semibold"> <?= $search_results['nbHits']; ?> </span> <?= $pluralized_match_number; ?> for: <span class="font-semibold"> <?= $_GET['problem']; ?> </span> </div>
 
                         <!-- result grid -->
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
@@ -150,7 +154,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
                     </div>
                 <?php } else { ?>
                     <div class="text-gray-500">
-                        <p>No results found for: <?= $_GET['problem']; ?></p>
+                        <p>No results found for: <span class="font-semibold"><?= $_GET['problem']; ?></span></p>
                     </div>
                 <?php }; ?>
 

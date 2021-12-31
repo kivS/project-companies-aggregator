@@ -67,30 +67,7 @@ if (isset($_GET['problem'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discover companies</title>
-
-    <style>
-        h1 {
-            text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: row;
-            align-content: center;
-            justify-content: center;
-        }
-
-        input {
-            width: 300px;
-            height: 50px;
-            border-radius: 25px;
-            text-align: center;
-        }
-
-        li {
-            border: 1px solid red;
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/main.css">
 </head>
 
 <body>

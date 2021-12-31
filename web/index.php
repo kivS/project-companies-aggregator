@@ -71,12 +71,13 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
     <title>Discover companies</title>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="/assets/main.css">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-slate-200">
+<body class="bg-slate-200" x-data="{ feedbackModalShow: false}">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
-            <h1 class="font-bold text-2xl mt-7 text-center">Discover what companies are working on what problems</h1>
+            <h1 class="font-bold text-2xl mt-7 text-center">Discover what public companies are working on what problems</h1>
 
             <form action="" method="get" class="w-full flex justify-center">
                 <div class="relative w-3/4">
@@ -104,7 +105,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
                             <?php foreach ($search_results['hits'] as $result) { ?>
                                 <li class="hover:scale-105 col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
-                                    <a href="#<?= $result['company_uid']; ?>">
+                                    <a href="#" @click.prevent="console.log($el.dataset.company_uid)" data-company_uid="<?= $result['company_uid']; ?>">
                                         <div class="flex-1 flex flex-col p-8">
                                             <!-- <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt=""> -->
                                             <h3 class="mt-6 text-gray-900 text-sm font-medium"><?= $result['name']; ?></h3>
@@ -156,29 +157,89 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 2) {
             <?php }; ?>
         </div>
 
-        <!-- form for feedback -->
-        <!-- <div class="absolute bottom-4">
-            <p>Feedback</p>
-            <form id="feedback" action="" method="POST" class="flex flex-col gap-2">
-                <input type="email" name="email" placeholder="your@email.com" required>
-                <textarea name="text" cols="30" rows="10" required placeholder="Your feedback here..."></textarea>
-                <input type="submit" value="Submit">
-            </form>
-        </div> -->
+        <!-- user feedback modal -->
+        <div x-cloak x-show="feedbackModalShow" aria-labelledby=" modal-title" role="dialog" aria-modal="true" class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- Background overlay, show/hide based on modal state. -->
+                <div x-show="feedbackModalShow"  x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
-        <a href="#" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">Feedback</a>
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <!-- Modal panel, show/hide based on modal state.-->
+                <div x-show="feedbackModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-10" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+
+                    <!-- thanks for feedback message -->
+                    <div id="feedback-success-message" @click.outside="feedbackModalShow = false" class="hidden bg-slate-100 w-full h-full absolute left-0 top-0 flex flex-col items-center justify-center z-10 gap-4">
+                        <p class="font-bold ">Thanks for your feedback</p>
+
+                        <button @click.prevent="feedbackModalShow = false; $el.parentElement.classList.add('hidden');" type=" button" class=" justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                            Close
+                        </button>
+
+                    </div>
+
+                    <form id="user-feedback" class="" action="" @submit.prevent="sendUserFeedback" method="POST">
+                        <div>
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                                <!-- heroicon/chat -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                            </div>
+
+                            <div class="mt-3 text-center sm:mt-5">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    Feedback
+                                </h3>
+                                <small class="text-gray-600">Something you want to see added or fixed?</small>
+
+                                <div class="mt-2">
+
+                                    <input type="hidden" name="email" value="<?= $user['email']; ?>">
+
+                                    <div class="mt-4">
+                                        <label for="email" class="sr-only">Email</label>
+                                        <input type="email" name="email" id="email" required placeholder="your@email.com" class="shadow-sm focus:ring-zinc-500 focus:border-ring-zinc-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label for="text" class="sr-only">Feedback</label>
+                                        <textarea id="text" name="text" required class="shadow-sm focus:ring-zinc-500 focus:border-ring-zinc-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Your feedback..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:col-start-2 sm:text-sm">
+                                Send
+                            </button>
+                            <button @click.prevent="feedbackModalShow = false" type=" button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-100 sm:mt-0 sm:col-start-1 sm:text-sm">
+                                Cancel
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">Feedback</a>
     </main>
     <script>
-        document.querySelector('form#feedback').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        async function sendUserFeedback(e) {
+
             // send request
             let request = await fetch('/send-feedback', {
                 method: 'POST',
-                body: new FormData(this)
+                body: new FormData(e.target)
             });
 
-            console.log(request);
-        })
+
+            document.querySelector('#feedback-success-message').classList.remove('hidden');
+            e.target.reset();
+
+        };
     </script>
 </body>
 

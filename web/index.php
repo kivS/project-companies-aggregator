@@ -12,7 +12,8 @@ if ($_SERVER['DOCUMENT_URI'] == '/company-detail' && isset($_GET['uid'])) {
     header('Content-Type: application/json');
 
     // get company from db
-    $stmt = $db->prepare('
+    $stmt = $db->prepare(
+        '
         SELECT 
             uid,
             clean_name as name, 
@@ -29,7 +30,7 @@ if ($_SERVER['DOCUMENT_URI'] == '/company-detail' && isset($_GET['uid'])) {
     $result = $stmt->execute();
     $company = $result->fetchArray(SQLITE3_ASSOC);
 
-    if(!$company) {
+    if (!$company) {
         http_response_code(404);
         echo json_encode(['error' => 'Company not found']);
         exit();
@@ -260,7 +261,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 </dt>
                                                 <dd x-text="company.industry" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
-                                            
+
                                             <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
                                                     Sector
@@ -383,15 +384,27 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         async function fetchCompanyDetails(company_uid) {
             console.log(`fetching company details for ${company_uid}`);
 
-            let request = await fetch(`/company-detail?uid=${company_uid}`);
-            let response = await request.json();
+            document.querySelector('body').classList.add('cursor-progress');
 
-            let event = new CustomEvent("company-detail", {
-                detail: {
-                    ...response
-                }
-            });
-            window.dispatchEvent(event);
+            try {
+                let request = await fetch(`/company-detail?uid=${company_uid}`);
+                let response = await request.json();
+
+                let event = new CustomEvent("company-detail", {
+                    detail: {
+                        ...response
+                    }
+                });
+                window.dispatchEvent(event);
+
+            } catch (error) {
+                alert('failed to retrieve company details. please try again');
+
+            } finally {
+                document.querySelector('body').classList.remove('cursor-progress');
+            }
+
+
         }
     </script>
 </body>

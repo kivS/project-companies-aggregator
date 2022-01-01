@@ -76,7 +76,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-slate-200" x-data="{ feedbackModalShow: false}">
+<body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false }">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
             <a href="/" tabindex="-1">
@@ -109,7 +109,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
                             <?php foreach ($search_results['hits'] as $result) { ?>
                                 <li class="hover:scale-105 col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
-                                    <a href="#" @click.prevent="console.log($el.dataset.company_uid)" data-company_uid="<?= $result['company_uid']; ?>">
+                                    <a href="#" @click.prevent="console.log($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>">
                                         <div class="flex-1 flex flex-col p-8">
                                             <!-- <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt=""> -->
                                             <h3 class="mt-6 text-gray-900 text-sm font-medium"><?= $result['name']; ?></h3>
@@ -160,6 +160,136 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
             <?php }; ?>
         </div>
+
+        <!-- company details modal -->
+        <div x-cloak x-show="companyDetailModalShow" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- Background overlay, show/hide based on modal state.    -->
+                <div x-show="companyDetailModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" aria-hidden="true" class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"></div>
+
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <!-- Modal panel, show/hide based on modal state. -->
+                <div x-show="companyDetailModalShow" @click.outside="companyDetailModalShow = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-10" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                    <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" @click="companyDetailModalShow = false" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span class="sr-only">Close</span>
+                            <!-- Heroicon name: outline/x -->
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Company Details
+                            </h3>
+                            <div class="mt-5">
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+
+                                    <div class="border-t border-gray-200">
+                                        <dl>
+                                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Full name
+                                                </dt>
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                    Margot Foster
+                                                </dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Application for
+                                                </dt>
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                    Backend Developer
+                                                </dd>
+                                            </div>
+                                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Email address
+                                                </dt>
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                    margotfoster@example.com
+                                                </dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Salary expectation
+                                                </dt>
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                    $120,000
+                                                </dd>
+                                            </div>
+                                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    About
+                                                </dt>
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.
+                                                </dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Attachments
+                                                </dt>
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                                    <ul role="list" class="border border-gray-200 rounded-md divide-y divide-gray-200">
+                                                        <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                                                            <div class="w-0 flex-1 flex items-center">
+                                                                <!-- Heroicon name: solid/paper-clip -->
+                                                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
+                                                                </svg>
+                                                                <span class="ml-2 flex-1 w-0 truncate">
+                                                                    resume_back_end_developer.pdf
+                                                                </span>
+                                                            </div>
+                                                            <div class="ml-4 flex-shrink-0">
+                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                    Download
+                                                                </a>
+                                                            </div>
+                                                        </li>
+                                                        <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                                                            <div class="w-0 flex-1 flex items-center">
+                                                                <!-- Heroicon name: solid/paper-clip -->
+                                                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
+                                                                </svg>
+                                                                <span class="ml-2 flex-1 w-0 truncate">
+                                                                    coverletter_back_end_developer.pdf
+                                                                </span>
+                                                            </div>
+                                                            <div class="ml-4 flex-shrink-0">
+                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                    Download
+                                                                </a>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 sm:mt-4 sm:ml-10 sm:pl-4 sm:flex justify-end">
+                        <button type="button" @click="companyDetailModalShow = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 bg-white text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- user feedback modal -->
         <div x-cloak x-show="feedbackModalShow" aria-labelledby=" modal-title" role="dialog" aria-modal="true" class="fixed z-10 inset-0 overflow-y-auto">
@@ -247,6 +377,10 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             e.submitter.disabled = false;
 
         };
+
+        async function companyDetails(e) {
+            console.log()
+        }
     </script>
 </body>
 

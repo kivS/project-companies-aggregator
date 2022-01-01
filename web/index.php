@@ -234,7 +234,6 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             // send button is disabled to prevent multiple clicks
             e.submitter.disabled = true;
 
-            // send request
             let request = await fetch('/send-feedback', {
                 method: 'POST',
                 body: new FormData(e.target)

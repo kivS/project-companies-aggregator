@@ -5,6 +5,40 @@ require_once __DIR__ . '/vendor/autoload.php';
 use MeiliSearch\Client;
 use GuzzleHttp\Client as GuzzleClient;
 
+$db = new SQLite3(DB_PATH);
+
+
+if ($_SERVER['DOCUMENT_URI'] == '/company-detail' && isset($_GET['uid'])) {
+    header('Content-Type: application/json');
+
+    // get company from db
+    $stmt = $db->prepare('
+        SELECT 
+            uid,
+            clean_name as name, 
+            symbol, 
+            ipo_year,  
+            sector,
+            country,
+            industry
+        FROM 
+            stonks 
+        WHERE uid = :uid'
+    );
+    $stmt->bindValue(':uid', $_GET['uid']);
+    $result = $stmt->execute();
+    $company = $result->fetchArray(SQLITE3_ASSOC);
+
+    if(!$company) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Company not found']);
+        exit();
+    }
+
+    echo json_encode($company);
+    exit();
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] == '/send-feedback') {
     header('Content-Type: application/json');
@@ -76,7 +110,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false }">
+<body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false, company: {} }">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
             <a href="/" tabindex="-1">
@@ -109,7 +143,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
                             <?php foreach ($search_results['hits'] as $result) { ?>
                                 <li class="hover:scale-105 col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
-                                    <a href="#" @click.prevent="console.log($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>">
+                                    <a href="#" @click.prevent="if($el.dataset.company_uid != company.uid) fetchCompanyDetails($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>">
                                         <div class="flex-1 flex flex-col p-8">
                                             <!-- <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt=""> -->
                                             <h3 class="mt-6 text-gray-900 text-sm font-medium"><?= $result['name']; ?></h3>
@@ -162,7 +196,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         </div>
 
         <!-- company details modal -->
-        <div x-cloak x-show="companyDetailModalShow" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
+        <div x-cloak x-show="companyDetailModalShow" @company-detail.window="company = $event.detail" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <!-- Background overlay, show/hide based on modal state.    -->
                 <div x-show="companyDetailModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" aria-hidden="true" class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"></div>
@@ -191,87 +225,55 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
                                     <div class="border-t border-gray-200">
                                         <dl>
+
                                             <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
-                                                    Full name
+                                                    Name
                                                 </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    Margot Foster
-                                                </dd>
+                                                <dd x-text="company.name" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
+
                                             <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
-                                                    Application for
+                                                    Symbol
                                                 </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    Backend Developer
-                                                </dd>
+                                                <dd x-text="company.symbol" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
+
                                             <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
-                                                    Email address
+                                                    IPO Year
                                                 </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    margotfoster@example.com
-                                                </dd>
+                                                <dd x-text="company.ipo_year" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
-                                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                                <dt class="text-sm font-medium text-gray-500">
-                                                    Salary expectation
-                                                </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    $120,000
-                                                </dd>
-                                            </div>
+
                                             <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
-                                                    About
+                                                    Country
                                                 </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.
-                                                </dd>
+                                                <dd x-text="company.country" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
+
+                                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Industry
+                                                </dt>
+                                                <dd x-text="company.industry" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
+                                            </div>
+                                            
                                             <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
-                                                    Attachments
+                                                    Sector
                                                 </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    <ul role="list" class="border border-gray-200 rounded-md divide-y divide-gray-200">
-                                                        <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                                                            <div class="w-0 flex-1 flex items-center">
-                                                                <!-- Heroicon name: solid/paper-clip -->
-                                                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
-                                                                </svg>
-                                                                <span class="ml-2 flex-1 w-0 truncate">
-                                                                    resume_back_end_developer.pdf
-                                                                </span>
-                                                            </div>
-                                                            <div class="ml-4 flex-shrink-0">
-                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-                                                                    Download
-                                                                </a>
-                                                            </div>
-                                                        </li>
-                                                        <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                                                            <div class="w-0 flex-1 flex items-center">
-                                                                <!-- Heroicon name: solid/paper-clip -->
-                                                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
-                                                                </svg>
-                                                                <span class="ml-2 flex-1 w-0 truncate">
-                                                                    coverletter_back_end_developer.pdf
-                                                                </span>
-                                                            </div>
-                                                            <div class="ml-4 flex-shrink-0">
-                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-                                                                    Download
-                                                                </a>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </dd>
+                                                <dd x-text="company.sector" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
+
+                                            <!-- <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                <dt class="text-sm font-medium text-gray-500">
+                                                    Description
+                                                </dt>
+                                                <dd x-text="company.description" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
+                                            </div> -->
                                         </dl>
                                     </div>
                                 </div>
@@ -378,8 +380,18 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
         };
 
-        async function companyDetails(e) {
-            console.log()
+        async function fetchCompanyDetails(company_uid) {
+            console.log(`fetching company details for ${company_uid}`);
+
+            let request = await fetch(`/company-detail?uid=${company_uid}`);
+            let response = await request.json();
+
+            let event = new CustomEvent("company-detail", {
+                detail: {
+                    ...response
+                }
+            });
+            window.dispatchEvent(event);
         }
     </script>
 </body>

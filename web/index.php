@@ -248,7 +248,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 <dd x-text="company.ipo_year" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
 
-                                            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                            <div class="bg-white-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
                                                     Country
                                                 </dt>
@@ -262,7 +262,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 <dd x-text="company.industry" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
 
-                                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                            <div class="bg-white-5o px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
                                                     Sector
                                                 </dt>
@@ -359,7 +359,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             </div>
         </div>
 
-        <a href="#" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">Feedback</a>
+        <a href="" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">Feedback</a>
     </main>
     <script>
         async function sendUserFeedback(e) {

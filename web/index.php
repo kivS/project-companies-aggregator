@@ -83,7 +83,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         $search = $index->search($_GET['problem']);
         $search_results = $search->getRaw();
 
-        $pluralized_match_number = $search_results['nbHits'] == 1 ? 'match' : 'matches';
+        $pluralized_match_number = $search_results['nbHits'] == 1 ? 'company' : 'companies';
 
         // echo print_r($search->getHits());
         // echo print_r($search->getRaw());
@@ -138,7 +138,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
                 <?php if (isset($search_results) && $search_results['nbHits'] > 0) { ?>
                     <div class="place-self-center sm:place-self-start mb-20 mt-5">
-                        <div class="m-2 text-gray-500"> <span class="font-semibold"> <?= $search_results['nbHits']; ?> </span> <?= $pluralized_match_number; ?> for: <span class="font-semibold"> <?= $_GET['problem']; ?> </span> </div>
+                        <div class="m-2 text-gray-500"> <span class="font-semibold"> <?= $search_results['nbHits']; ?> </span> <?= $pluralized_match_number; ?> working on <span class="font-semibold"> <?= $_GET['problem']; ?> </span> </div>
 
                         <!-- result grid -->
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">

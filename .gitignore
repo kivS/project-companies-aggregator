@@ -7,3 +7,4 @@ tailwind
 public/
 node_modules/
 python_venv/
+__pycache__/

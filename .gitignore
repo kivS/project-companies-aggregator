@@ -6,3 +6,4 @@ env.py
 tailwind
 public/
 node_modules/
+python_venv/

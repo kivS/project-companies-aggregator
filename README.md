@@ -16,6 +16,22 @@
 
 
 ## Instructions
+
+### Python Bots
+
+- create virtual environment
+```bash
+# in project folder
+python3 -m venv python_venv
+```
+
+- Install dependencies
+```bash
+./python_venv/bin/python -m pip install -r requirements.txt 
+```
+
+
+
 - Download all the public listed companies csv file and save it as stocks.csv:  https://www.nasdaq.com/market-activity/stocks/screener
 
 - Run `./csv_to_db.py` file to populate database from the file

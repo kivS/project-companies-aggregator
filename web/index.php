@@ -366,6 +366,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
             // send button is disabled to prevent multiple clicks
             e.submitter.disabled = true;
+            document.querySelector('#feedback-success-message').classList.remove('hidden');
 
             let request = await fetch('/send-feedback', {
                 method: 'POST',
@@ -373,7 +374,6 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             });
 
 
-            document.querySelector('#feedback-success-message').classList.remove('hidden');
             e.target.reset();
 
             // let's enable back the send button

@@ -18,7 +18,7 @@ sys.path.append(os.path.abspath("/var/www/project-companies-aggregator"))
 from env import * # local env file
 
 
-client = meilisearch.Client(MEILISEARCH_CLIENT_URL)
+client = meilisearch.Client(MEILISEARCH_CLIENT_URL, MEILISEARCH_API_KEY)
 # An index is where the documents are stored.
 index = client.index(MEILISEARCH_APP_INDEX)
 

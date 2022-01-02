@@ -78,7 +78,7 @@ Email: {$email}
 
 if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
-        $client = new Client(MEILISEARCH_CLIENT_URL);
+        $client = new Client(MEILISEARCH_CLIENT_URL, MEILISEARCH_API_KEY);
         $index = $client->index(MEILISEARCH_APP_INDEX);
         $search = $index->search($_GET['problem']);
         $search_results = $search->getRaw();

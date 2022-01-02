@@ -22,7 +22,7 @@
 - create virtual environment
 ```bash
 # in project folder
-python3 -m venv python_venv
+python -m venv python_venv
 ```
 
 - Install dependencies

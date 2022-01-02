@@ -31,34 +31,14 @@
 
 - Create companies aggregator index:
 ```bash
-wget --no-check-certificate --quiet \
-  --method POST \
-  --timeout=0 \
-  --header 'Cache-Control: no-cache' \
-  --header 'Accept: */*' \
-  --header 'Accept-Encoding: gzip, deflate' \
-  --header 'Connection: keep-alive' \
-  --body-data '{
-    "uid": "companies-aggregator",
-    "primaryKey": "company_uid"  
-}' \
-   'http://127.0.0.1:7700/indexes/'
+# httpie
+http POST :7700/indexes uid="companies-aggregator"  primaryKey="company_uid"  X-MEILI-API-KEY:$MEILI_MASTER_KEY
 ```
 
 - Choose what fields can be searched:
 ```bash
-wget --no-check-certificate --quiet \
-  --method POST \
-  --timeout=0 \
-  --header 'Cache-Control: no-cache' \
-  --header 'Accept: */*' \
-  --header 'Accept-Encoding: gzip, deflate' \
-  --header 'Connection: keep-alive' \
-  --body-data '[
-    "tags"
-
-]' \
-   'http://127.0.0.1:7700/indexes/companies-aggregator/settings/searchable-attributes'
+# httpie
+echo '["tags"]' | http POST :7700/indexes/companies-aggregator/settings/searchable-attributes  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
 ```
 
 - tailwind vscode auto-complete:

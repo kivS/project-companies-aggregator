@@ -47,7 +47,11 @@ for company in companies:
     document['company_uid'] = company['uid'] or uid
     document['name'] = company['clean_name'] or company['name']
     document['symbol'] = company['symbol']
-    document['tags'] = json.loads(company['tags'])
+    try:
+        document['tags'] = json.loads(company['tags'])
+    except:
+        print(f'Error parsing tags for {company["name"]}. check the json yo!')
+        continue
     # add/replace document in meilisearch
     index.add_documents([document])
 

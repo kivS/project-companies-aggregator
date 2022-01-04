@@ -109,6 +109,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="/assets/main.css">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <?php if (USE_NINJA_ANALYTICS) { ?>
+        <script defer data-domain="problemsolvers.kiv.software" src="https://ninja.kiv.software/js/plausible.js"></script>
+    <?php }; ?>
 </head>
 
 <body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false, company: {} }">

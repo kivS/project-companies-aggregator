@@ -1,5 +1,7 @@
 # Discover what companies are working on what problems
 
+# TODO:
+- https://plausible.io/docs/custom-query-params
 
 ## Dependencies
 

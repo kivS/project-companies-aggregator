@@ -30,7 +30,19 @@ if __name__ == '__main__':
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
-    tickers = cursor.execute('SELECT symbol from stonks WHERE description is null ORDER BY RANDOM()').fetchall()
+    # update single ticker from command line
+    if len(sys.argv) > 1:
+        ticker_symbol = sys.argv[1]
+
+        tickers = cursor.execute(f"SELECT * FROM stonks WHERE symbol = ? LIMIT 1", (ticker_symbol,)).fetchall()
+        print(f"Found {tickers[0]['clean_name']}")
+        input_result = input("Get description? (y/n) ")
+
+        if input_result == 'n':
+            print("Exiting...")
+            exit()
+    else:
+        tickers = cursor.execute('SELECT symbol from stonks WHERE description is null ORDER BY RANDOM()').fetchall()
 
     if bool(tickers) is False:
         print('No tickers, nothing to do...')

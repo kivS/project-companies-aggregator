@@ -363,7 +363,13 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             </div>
         </div>
 
-        <a href="" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">Feedback</a>
+        <a href="" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">
+            Feedback
+
+            <span class="animate-ping inline-flex h-3 w-3">
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+            </span>
+        </a>
     </main>
     <script>
         async function sendUserFeedback(e) {

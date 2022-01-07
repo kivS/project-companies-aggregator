@@ -80,7 +80,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
         $client = new Client(MEILISEARCH_CLIENT_URL, MEILISEARCH_API_KEY);
         $index = $client->index(MEILISEARCH_APP_INDEX);
-        $search = $index->search($_GET['problem']);
+        $search = $index->search($_GET['problem'], ['limit' => 21]);
         $search_results = $search->getRaw();
 
         $pluralized_match_number = $search_results['nbHits'] == 1 ? 'company' : 'companies';

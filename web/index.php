@@ -148,7 +148,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
                             <?php foreach ($search_results['hits'] as $result) { ?>
                                 <li class="hover:scale-105 col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
-                                    <a href="#" @click.prevent="if($el.dataset.company_uid != company.uid) fetchCompanyDetails($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>">
+                                    <a href="#" @click.prevent="if($el.dataset.company_uid != company.uid) fetchCompanyDetails($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>" class="h-full">
                                         <div class="flex-1 flex flex-col p-8">
                                             <!-- <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt=""> -->
                                             <h3 class="mt-6 text-gray-900 text-sm font-medium"><?= $result['name']; ?></h3>

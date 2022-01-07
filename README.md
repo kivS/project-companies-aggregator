@@ -1,7 +1,10 @@
 # Discover what companies are working on what problems
 
 # TODO:
-- synonyms
+
+- make it public 
+- adjust search params in meilisearch
+- synonyms meilisearch
     - oncology <> cancer
 
 ## Dependencies

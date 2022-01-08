@@ -45,7 +45,11 @@ python -m venv python_venv
 
 ### Configs
 
-- See all configs: `GET: http://127.0.0.1:7700/indexes/companies-aggregator/settings`
+- See all configs:
+```bash
+# httpie
+ http :7700/indexes/companies-aggregator/settings  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
+ ```
 
 - Create companies aggregator index:
 ```bash
@@ -57,6 +61,47 @@ http POST :7700/indexes uid="companies-aggregator"  primaryKey="company_uid"  X-
 ```bash
 # httpie
 echo '["tags"]' | http POST :7700/indexes/companies-aggregator/settings/searchable-attributes  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
+```
+
+- Choose what fields can be filtered:
+```bash
+# httpie
+echo '["tags"]' | http POST :7700/indexes/companies-aggregator/settings/filterable-attributes X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
+```
+
+- Set synonyms:
+```bash
+# httpie
+echo '
+{
+    "cancer": [
+        "oncology"
+    ],
+    "oncology": [
+        "cancer"
+    ]
+}' | http POST :7700/indexes/companies-aggregator/settings/synonyms  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
+```
+
+- Set ranking rules order:
+```bash
+# httpie
+echo '
+    [
+        "sort",
+        "words",
+        "typo",
+        "proximity",
+        "attribute",
+        "exactness",
+    ]
+' | http POST :7700/indexes/companies-aggregator/settings/ranking-rules  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
+```
+
+- Choose fields that can be sortable:
+``bash
+# httpie
+echo '["name", "symbol"]' | http POST :7700/indexes/companies-aggregator/settings/sortable-attributes  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
 ```
 
 - tailwind vscode auto-complete:

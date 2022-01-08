@@ -18,15 +18,15 @@ if ($_SERVER['DOCUMENT_URI'] == '/company-detail' && isset($_GET['uid'])) {
 
     // get company from db
     $stmt = $db->prepare(
-        '
-        SELECT 
+        'SELECT 
             uid,
             clean_name as name, 
             symbol, 
             ipo_year,  
             sector,
             country,
-            industry
+            industry,
+            media_links
         FROM 
             stonks 
         WHERE uid = :uid'
@@ -48,6 +48,7 @@ if ($_SERVER['DOCUMENT_URI'] == '/company-detail' && isset($_GET['uid'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] == '/send-feedback') {
     header('Content-Type: application/json');
+    header('Accept: application/json');
 
     $email = $_POST['email'];
     $text = $_POST['text'];
@@ -263,7 +264,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
                                 Company Details
                             </h3>
-                            <div class="mt-5">
+                            <div class="relative mt-5">
                                 <div class="bg-white shadow overflow-hidden sm:rounded-lg">
 
                                     <div class="border-t border-gray-200">
@@ -276,11 +277,57 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 <dd x-text="company.name" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
 
-                                            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+
+                                            <div x-data="{showLinksMenu: false}" class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                                 <dt class="text-sm font-medium text-gray-500">
                                                     Symbol
                                                 </dt>
-                                                <dd x-text="company.symbol" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
+                                                <a href="#" @click="showLinksMenu = true" :class="{ 'pointer-events-none': !company.media_links }">
+                                                    <dd :class="{ 'text-sky-500 hover:text-sky-400': company.media_links }" class="mt-1 inline-flex group text-sm  sm:mt-0 sm:col-span-2">
+                                                        <div x-text="company.symbol"></div>
+                                                        <!--
+                                                        Heroicon name: solid/chevron-down
+                                                        Item active: "text-gray-600", Item inactive: "text-gray-400"
+                                                    -->
+                                                        <svg :class="{ 'hidden': !company.media_links }" class="h-5 w-5 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </dd>
+                                                </a>
+
+                                                <!-- Flyout menu, show/hide based on flyout menu state. -->
+                                                <div x-show="showLinksMenu" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1" @click.outside="showLinksMenu = false" class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-7 px-2 w-screen max-w-xs sm:px-0">
+                                                    <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                                                        <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+
+                                                            <template x-for="link in company.media_links">
+                                                                <a :href="link.url" class="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                                                                    <p x-text="link.site_name" class="text-base font-medium text-gray-900"></p>
+                                                                </a>
+                                                            </template>
+
+                                                            <!-- <a href="#" class="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                                                                <p class="text-base font-medium text-gray-900">
+                                                                    Marketwatch
+                                                                </p>
+                                                            </a>
+
+                                                            <a href="#" class="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                                                                <p class="text-base font-medium text-gray-900">
+                                                                    Google Finance
+                                                                </p>
+                                                            </a>
+
+                                                            <a href="#" class="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                                                                <p class="text-base font-medium text-gray-900">
+                                                                    Potato
+                                                                </p>
+                                                            </a> -->
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
 
                                             <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -311,12 +358,6 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 <dd x-text="company.sector" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
 
-                                            <!-- <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                                <dt class="text-sm font-medium text-gray-500">
-                                                    Description
-                                                </dt>
-                                                <dd x-text="company.description" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
-                                            </div> -->
                                         </dl>
                                     </div>
                                 </div>
@@ -489,6 +530,8 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             try {
                 let request = await fetch(`/company-detail?uid=${company_uid}`);
                 let response = await request.json();
+
+                response.media_links = JSON.parse(response.media_links);
 
                 let event = new CustomEvent("company-detail", {
                     detail: {

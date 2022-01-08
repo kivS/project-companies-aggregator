@@ -2,6 +2,11 @@
 require_once(__DIR__ . '/../.env.php');
 require_once __DIR__ . '/vendor/autoload.php';
 
+if (SENTRY_DSN) {
+    \Sentry\init(['dsn' => SENTRY_DSN]);
+}
+
+
 use MeiliSearch\Client;
 use GuzzleHttp\Client as GuzzleClient;
 

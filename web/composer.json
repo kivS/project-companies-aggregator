@@ -2,6 +2,7 @@
     "require": {
         "meilisearch/meilisearch-php": "^0.20.0",
         "guzzlehttp/guzzle": "^7.4",
-        "http-interop/http-factory-guzzle": "^1.0"
+        "http-interop/http-factory-guzzle": "^1.0",
+        "sentry/sdk": "^3.1"
     }
 }

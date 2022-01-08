@@ -171,7 +171,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                         $highlights[] = $tag;
                                     }
                                     ?>
-                                    <button data-highlights='<?= json_encode($highlights); ?>' @click="companyHighlights = JSON.parse($el.dataset.highlights); companyHighlightsModalShow = true; console.log(companyHighlights)" class="absolute touch p-1 mr-1 hover:cursor-help right-0">x</button>
+                                    <button data-highlights='<?= json_encode($highlights); ?>' @click="companyHighlights = JSON.parse($el.dataset.highlights); companyHighlightsModalShow = true;" class="absolute touch p-1 mr-1 hover:cursor-help right-0">x</button>
 
                                     <a href="#" @click.prevent="if($el.dataset.company_uid != company.uid) fetchCompanyDetails($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>" class="h-full">
                                         <div class="flex-1 flex flex-col p-8">
@@ -469,7 +469,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         };
 
         async function fetchCompanyDetails(company_uid) {
-            console.log(`fetching company details for ${company_uid}`);
+            // console.log(`fetching company details for ${company_uid}`);
 
             document.querySelector('body').classList.add('cursor-progress');
 

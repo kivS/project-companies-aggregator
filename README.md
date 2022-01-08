@@ -93,7 +93,7 @@ echo '
         "typo",
         "proximity",
         "attribute",
-        "exactness",
+        "exactness"
     ]
 ' | http POST :7700/indexes/companies-aggregator/settings/ranking-rules  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
 ```

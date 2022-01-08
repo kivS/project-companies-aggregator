@@ -324,7 +324,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
         <!-- company search hightlights modal -->
         <div x-cloak x-show="companyHighlightsModalShow" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <!-- Background overlay, show/hide based on modal state.    -->
                 <div x-show="companyHighlightsModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" aria-hidden="true" class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"></div>
 
@@ -347,7 +347,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
                                 Search matches
                             </h3>
-                            
+
                             <div class="mt-5">
                                 <div class="bg-white shadow overflow-hidden sm:rounded-lg">
 

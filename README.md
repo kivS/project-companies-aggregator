@@ -2,10 +2,6 @@
 
 # TODO:
 
-- make it public 
-- adjust search params in meilisearch
-- synonyms meilisearch
-    - oncology <> cancer
 
 ## Dependencies
 

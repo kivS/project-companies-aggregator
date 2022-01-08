@@ -80,7 +80,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
         $client = new Client(MEILISEARCH_CLIENT_URL, MEILISEARCH_API_KEY);
         $index = $client->index(MEILISEARCH_APP_INDEX);
-        $search = $index->search($_GET['problem'], ['limit' => 18, 'sort' => ['symbol:asc'], 'attributesToHighlight' => ['tags'] , 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol' ]]);
+        $search = $index->search($_GET['problem'], ['limit' => 18, 'sort' => ['symbol:asc'], 'attributesToHighlight' => ['tags'], 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol']]);
         $search_results = $search->getRaw();
 
         // header('Content-Type: application/json'); // DEBUG
@@ -119,7 +119,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     <?php }; ?>
 </head>
 
-<body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false, company: {} }">
+<body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false, company: {}, companyHighlights: [], companyHighlightsModalShow: false }">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
             <a href="/" tabindex="-1">
@@ -151,7 +151,28 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                         <!-- result grid -->
                         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
                             <?php foreach ($search_results['hits'] as $result) { ?>
-                                <li class="hover:scale-105 col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
+                                <li class="relative hover:scale-105 col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
+
+                                    <!-- highlight matches -->
+                                    <?php
+
+                                    $highlights = [];
+
+                                    foreach ($result['_formatted']['tags'] as $tag) {
+
+                                        if (strpos($tag, '<em>') === false) {
+                                            continue;
+                                        }
+
+                                        // replace 'em' tag with 'mark' tag
+                                        $tag = str_replace('<em>', '<mark>', $tag);
+                                        $tag = str_replace('</em>', '</mark>', $tag);
+
+                                        $highlights[] = $tag;
+                                    }
+                                    ?>
+                                    <button data-highlights='<?= json_encode($highlights); ?>' @click="companyHighlights = JSON.parse($el.dataset.highlights); companyHighlightsModalShow = true; console.log(companyHighlights)" class="absolute touch p-1 mr-1 hover:cursor-help right-0">x</button>
+
                                     <a href="#" @click.prevent="if($el.dataset.company_uid != company.uid) fetchCompanyDetails($el.dataset.company_uid); companyDetailModalShow = true" data-company_uid="<?= $result['company_uid']; ?>" class="h-full">
                                         <div class="flex-1 flex flex-col p-8">
                                             <!-- <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt=""> -->
@@ -294,6 +315,58 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
                     <div class="mt-5 sm:mt-4 sm:ml-10 sm:pl-4 sm:flex justify-end">
                         <button type="button" @click="companyDetailModalShow = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 bg-white text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- company search hightlights modal -->
+        <div x-cloak x-show="companyHighlightsModalShow" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- Background overlay, show/hide based on modal state.    -->
+                <div x-show="companyHighlightsModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" aria-hidden="true" class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"></div>
+
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <!-- Modal panel, show/hide based on modal state. -->
+                <div x-show="companyHighlightsModalShow" @keydown.window.escape="companyHighlightsModalShow = false" @click.outside="companyHighlightsModalShow = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-10" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                    <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" @click="companyHighlightsModalShow = false" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500">
+                            <span class="sr-only">Close</span>
+                            <!-- Heroicon name: outline/x -->
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Search matches
+                            </h3>
+                            
+                            <div class="mt-5">
+                                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+
+                                    <div class="border-t border-gray-200">
+                                        <dl>
+                                            <template x-for="match in companyHighlights">
+                                                <div class="even:bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                                    <dd x-html="match" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
+                                                </div>
+                                            </template>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 sm:mt-4 sm:ml-10 sm:pl-4 sm:flex justify-end">
+                        <button type="button" @click="companyHighlightsModalShow = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 bg-white text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                             Close
                         </button>
                     </div>

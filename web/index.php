@@ -80,8 +80,12 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
         $client = new Client(MEILISEARCH_CLIENT_URL, MEILISEARCH_API_KEY);
         $index = $client->index(MEILISEARCH_APP_INDEX);
-        $search = $index->search($_GET['problem'], ['limit' => 18]);
+        $search = $index->search($_GET['problem'], ['limit' => 18, 'sort' => ['symbol:asc'], 'attributesToHighlight' => ['tags'] , 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol' ]]);
         $search_results = $search->getRaw();
+
+        // header('Content-Type: application/json'); // DEBUG
+        // echo json_encode($search_results, JSON_PRETTY_PRINT); // DEBUG
+        // exit(); // DEBUG
 
         $pluralized_match_number = $search_results['nbHits'] == 1 ? 'company' : 'companies';
 

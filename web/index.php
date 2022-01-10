@@ -299,8 +299,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 <div x-show="showLinksMenu" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1" @click.outside="showLinksMenu = false" class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-7 px-2 w-screen max-w-xs sm:px-0">
                                                     <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                                                         <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                                                            <!-- media links for company -->
                                                             <template x-for="link in company.media_links">
-                                                                <a :href="link.url" class="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                                                                <a :href="link.url" class="-m-3 p-3 block rounded-md even:bg-gray-50 hover:bg-gray-100 transition ease-in-out duration-150">
                                                                     <p x-text="link.site_name" class="text-base font-medium text-gray-900"></p>
                                                                 </a>
                                                             </template>

@@ -73,6 +73,8 @@ if __name__ == '__main__':
 
         media_links = []
 
+        print(f'processing: {ticker["symbol"]}. item {index}/{tickers_size}')
+
         for source in MEDIA_SOURCES:
 
             print(f'Fetching media links for {ticker["symbol"]} from {source["site_name"]}...')

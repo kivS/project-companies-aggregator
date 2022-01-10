@@ -1,30 +1,7 @@
 #!/usr/bin/env python3
 '''
     The script will fetch all the companies in the database and fetch media links for each company, if they're not present.
-    The format for the media links is:
-
-    [
-        {
-            "url": "https://finance.yahoo.com/quote/TSLA/",
-            "site_name": "Yahoo Finance"
-        },
-        {
-            "url": "https://www.google.com/finance?q=TSLA",
-            "site_name": "Google Finance"
-        },
-        {
-            "url": "https://www.marketwatch.com/investing/stock/tsla",
-            "site_name": "MarketWatch"
-        },
-        {
-            "url": "https://www.bloomberg.com/quote/TSLA:US",
-            "site_name": "Bloomberg"
-        },
-        {
-            "url": "https://money.cnn.com/quote/quote.html?symb=TSLA",
-            "site_name": "CNN Money"
-        }
-    ]
+    The format for the media links is stored in MEDIA_SOURCES.
 
 '''
 
@@ -92,7 +69,7 @@ if __name__ == '__main__':
     print(f'Processing {tickers_size} items..')
 
     total_rows_inserted = 0
-    for index, ticker in enumerate(tickers[:5], start=1):   
+    for index, ticker in enumerate(tickers, start=1):   
 
         media_links = []
 

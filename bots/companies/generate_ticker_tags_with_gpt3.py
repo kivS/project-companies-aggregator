@@ -6,7 +6,9 @@ import os
 # root project dir
 sys.path.append(os.path.abspath("/var/www/project-companies-aggregator"))
 from env import * # local env file
-
+import openai
+import sqlite3
+import json
 
 COMPLETION_SEED = '''
 Given the company's name, country, sector, industry and description, generate tags describing what the company does, works in or is trying to solve.
@@ -81,7 +83,7 @@ tags:[
 '''.lstrip()
 
 
-NEW_COMPLETION_REQUEST_INFO = '''
+NEW_TAGS_COMPLETION_TEMPLATE = '''
 ---
 name: {name}
 country: {country}
@@ -91,7 +93,58 @@ description: {description}
 tags:[ 
 '''.strip()
 
+def get_gpt3_tags(prompt: str):
+    response = openai.Completion.create(
+        engine="davinci-instruct-beta-v3",
+        prompt= prompt,
+        temperature=0.72,
+        max_tokens=900,
+        top_p=1,
+        frequency_penalty=0.93,
+        presence_penalty=0.74,
+        stop=["---", "]"]
+    )
+    return response
+
 if __name__ == '__main__':
+    con = sqlite3.connect(DB_PATH)
+    con.row_factory = sqlite3.Row
+    cursor = con.cursor()
+    openai.api_key = OPENAI_API_KEY
+
     if len(sys.argv) > 1:
         ticker_symbol = sys.argv[1]
-        print(ticker_symbol)
+
+        ticker = cursor.execute('''
+            SELECT *
+            FROM stonks 
+            WHERE symbol = ? LIMIT 1''', (ticker_symbol,)
+        ).fetchone()
+
+        if ticker is None:
+            print(f'Ticker symbol "{ticker_symbol}" not found in db')
+            sys.exit(1)
+
+
+        # build the prompt for gpt-3
+        completion_prompt = COMPLETION_SEED + NEW_TAGS_COMPLETION_TEMPLATE.format(
+            name=ticker['clean_name'],
+            country= '' if ticker['country'] is None else ticker['country'],
+            sector= '' if ticker['sector'] is None else ticker['sector'],
+            industry= '' if ticker['industry'] is None else ticker['industry'],
+            description= '' if ticker['description'] is None else ticker['description']
+        )
+
+        result = get_gpt3_tags(completion_prompt)
+        print(result.choices[0])
+
+        # parse the completion results and clean up the tags
+        result_text = result.choices[0]['text']
+        tags: list = result_text.replace('"', '').replace('\n', '').split(',')
+
+        print(f'tags from gpt-3: {json.dumps(tags)}')
+
+        # update the ticker record
+        q = cursor.execute('UPDATE stonks SET tags = ? WHERE symbol = ?', (json.dumps(tags), ticker['symbol']))
+        con.commit()
+

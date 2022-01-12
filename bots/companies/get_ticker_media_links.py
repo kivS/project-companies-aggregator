@@ -80,7 +80,7 @@ if __name__ == '__main__':
             print(f'Fetching media links for {ticker["symbol"]} from {source["site_name"]}...')
 
             # sleep random amount of seconds
-            sleep_time = round(random.uniform(0.5, 2.0), 2)
+            sleep_time = round(random.uniform(0.5, 1.0), 2)
             print(f'Sleeping for {sleep_time}s...')
             time.sleep(sleep_time)
 

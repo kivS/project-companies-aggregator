@@ -1,4 +1,8 @@
 '''
+
+    params:
+    - ticker_symbol (optional)
+    - --skip-filled (optional) - skip tickers that already have tags
 '''
 
 import sys
@@ -93,6 +97,8 @@ description: {description}
 tags:[ 
 '''.strip()
 
+MAX_PROMPT_TOKEN_LENGTH = 2048 # 1 token ~ 4 chars or 1 'hello'
+
 def get_gpt3_tags(prompt: str):
     response = openai.Completion.create(
         engine="davinci-instruct-beta-v3",
@@ -106,11 +112,23 @@ def get_gpt3_tags(prompt: str):
     )
     return response
 
+def build_prompt(name: str, country: str, sector: str, industry: str, description: str) -> str:
+    prompt = COMPLETION_SEED + NEW_TAGS_COMPLETION_TEMPLATE.format(
+        name=name,
+        country=country,
+        sector=sector,
+        industry=industry,
+        description=description
+    )
+    return prompt
+
 if __name__ == '__main__':
     con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
     openai.api_key = OPENAI_API_KEY
+
+    skip_filled = False if '--skip-filled' not in sys.argv else True
 
     if len(sys.argv) > 1:
         ticker_symbol = sys.argv[1]
@@ -125,17 +143,49 @@ if __name__ == '__main__':
             print(f'Ticker symbol "{ticker_symbol}" not found in db')
             sys.exit(1)
 
+        # check if ticker is elligible for gpt3 completion, ie, has at least a description, industry and sector
+        if ticker['description'] is None or ticker['industry'] is None or ticker['sector'] is None:
+            print(f'Ticker symbol "{ticker_symbol}" not elligible for gpt3 completion. Missing description, industry or sector')
+            sys.exit(1)
+
+        # confirm in case tags is already present
+        if ticker['tags'] is not None:
+            print(f'Ticker symbol "{ticker_symbol}" already has tags')
+            confirm =  'n' if skip_filled  else input('Do you want to overwrite? [y/n] ')
+            if confirm != 'y':
+                print('Aborting...')
+                sys.exit(1)
 
         # build the prompt for gpt-3
-        completion_prompt = COMPLETION_SEED + NEW_TAGS_COMPLETION_TEMPLATE.format(
-            name=ticker['clean_name'],
-            country= '' if ticker['country'] is None else ticker['country'],
-            sector= '' if ticker['sector'] is None else ticker['sector'],
-            industry= '' if ticker['industry'] is None else ticker['industry'],
-            description= '' if ticker['description'] is None else ticker['description']
+        completion_prompt = build_prompt(
+                name=ticker['clean_name'],
+                country= '' if ticker['country'] is None else ticker['country'],
+                sector= '' if ticker['sector'] is None else ticker['sector'],
+                industry= '' if ticker['industry'] is None else ticker['industry'],
+                description= '' if ticker['description'] is None else ticker['description']
         )
 
-        result = get_gpt3_tags(completion_prompt)
+        # make sure prompt is not too long
+        if len(completion_prompt) > MAX_PROMPT_TOKEN_LENGTH:
+            print(f"Ticker symbol '{ticker_symbol}' prompt is too long. length is {len(completion_prompt)}/{MAX_PROMPT_TOKEN_LENGTH}. cutting prompt down a bit...")
+            # truncate description
+            description = ticker['description']
+            new_max_len = len(description) - (len(completion_prompt) - MAX_PROMPT_TOKEN_LENGTH) # lets remove the excess chars in the prompt from the description
+            description = f"{description[: new_max_len]}."
+
+            completion_prompt = build_prompt(
+                name=ticker['clean_name'],
+                country= '' if ticker['country'] is None else ticker['country'],
+                sector= '' if ticker['sector'] is None else ticker['sector'],
+                industry= '' if ticker['industry'] is None else ticker['industry'],
+                description=description
+            )
+
+        try:
+            result = get_gpt3_tags(completion_prompt)
+        except Exception as e:
+            print(f"Failed to get gpt-3 completion for: {ticker['symbol']} | Error: {e}")
+            sys.exit(1)
         print(result.choices[0])
 
         # parse the completion results and clean up the tags
@@ -143,6 +193,7 @@ if __name__ == '__main__':
         tags: list = result_text.replace('"', '').replace('\n', '').split(',')
 
         print(f'tags from gpt-3: {json.dumps(tags)}')
+        
 
         # update the ticker record
         q = cursor.execute('UPDATE stonks SET tags = ? WHERE symbol = ?', (json.dumps(tags), ticker['symbol']))

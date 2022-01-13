@@ -1,7 +1,8 @@
 # Discover what companies are working on what problems
 
 # TODO:
-
+- we need a way to track what problems were searched by users
+- Link to company website
 
 ## Dependencies
 

@@ -93,10 +93,27 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         // echo json_encode($search_results, JSON_PRETTY_PRINT); // DEBUG
         // exit(); // DEBUG
 
+
+        
         $pluralized_match_number = $search_results['nbHits'] == 1 ? 'company' : 'companies';
 
         // echo print_r($search->getHits());
         // echo print_r($search->getRaw());
+
+        // store searched terms in db into user_searches
+        $stmt = $db->prepare(
+            'INSERT INTO user_searches (problem, user_ip, user_agent, nb_hits, created_at) 
+            VALUES (:problem, :user_ip, :user_agent, :nb_hits, :created_at)'
+        );
+        $stmt->bindValue(':problem', $_GET['problem']);
+        $stmt->bindValue(':user_ip', $_SERVER['REMOTE_ADDR']);
+        $stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
+        $stmt->bindValue(':nb_hits', $search_results['nbHits']);
+        $stmt->bindValue(':created_at', (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP') );
+        $stmt->execute();
+
+       
+        
     } catch (Exception $e) {
         // echo $e->getMessage();
         // echo $e->getTraceAsString();

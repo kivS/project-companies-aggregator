@@ -4,8 +4,6 @@ vendor/
 .env.php
 env.py
 tailwind
-!public/assets/main.css
-public/
 node_modules/
 python_venv/
 __pycache__/

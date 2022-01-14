@@ -136,7 +136,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     <title>Discover companies by the problems they're working on</title>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="/assets/main.css">
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="/assets/alpinejs@3.8.0.js"></script>
     <?php if (USE_NINJA_ANALYTICS) { ?>
         <script defer data-domain="problemsolvers.kiv.software" src="https://ninja.kiv.software/js/plausible.js"></script>
     <?php }; ?>

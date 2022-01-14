@@ -8,7 +8,9 @@ CREATE TABLE stonks(
     industry TEXT,
     is_public BOOLEAN,
     description TEXT,
-    extraction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-    uid TEXT, 
-    tags TEXT
+    extraction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    uid text,
+    tags text,
+    clean_name text,
+    media_links text
 );

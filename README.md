@@ -2,7 +2,6 @@
 
 # TODO:
 - List of interesting searches on webpage
-- bot to crawl link to company website
 
 ## Dependencies
 

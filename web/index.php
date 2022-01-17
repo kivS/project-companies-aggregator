@@ -26,6 +26,7 @@ if ($_SERVER['DOCUMENT_URI'] == '/company-detail' && isset($_GET['uid'])) {
             sector,
             country,
             industry,
+            website_url,
             media_links
         FROM 
             stonks 
@@ -291,7 +292,13 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 <dt class="text-sm font-medium text-gray-500">
                                                     Name
                                                 </dt>
-                                                <dd x-text="company.name" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
+                                                <template x-if="company.website_url">
+                                                    <a :href="company.website_url">
+                                                        <dd x-text="company.name" class="mt-1 text-sm text-sky-500 hover:text-sky-400 sm:mt-0 sm:col-span-2"></dd>
+                                                    </a>
+                                                </template>
+
+                                                <dd x-show="!company.website_url" x-text="company.name" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
                                             </div>
 
 
@@ -300,13 +307,13 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                     Symbol
                                                 </dt>
                                                 <a href="#" @click="showLinksMenu = true" :class="{ 'pointer-events-none': !company.media_links }">
-                                                    <dd :class="{ 'text-sky-500 hover:text-sky-400': company.media_links }" class="mt-1 inline-flex group text-sm  sm:mt-0 sm:col-span-2">
+                                                    <dd class="mt-1 inline-flex group text-sm  sm:mt-0 sm:col-span-2">
                                                         <div x-text="company.symbol"></div>
                                                         <!--
                                                         Heroicon name: solid/chevron-down
                                                         Item active: "text-gray-600", Item inactive: "text-gray-400"
                                                     -->
-                                                        <svg :class="{ 'hidden': !company.media_links }" class="h-5 w-5 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <svg :class="{ 'hidden': !company.media_links }" class="h-5 w-5 text-sky-500 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                                         </svg>
                                                     </dd>

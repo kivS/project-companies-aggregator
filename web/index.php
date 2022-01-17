@@ -94,7 +94,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         // exit(); // DEBUG
 
 
-        
+
         $pluralized_match_number = $search_results['nbHits'] == 1 ? 'company' : 'companies';
 
         // echo print_r($search->getHits());
@@ -109,11 +109,8 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         $stmt->bindValue(':user_ip', $_SERVER['REMOTE_ADDR']);
         $stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
         $stmt->bindValue(':nb_hits', $search_results['nbHits']);
-        $stmt->bindValue(':created_at', (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP') );
+        $stmt->bindValue(':created_at', (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP'));
         $stmt->execute();
-
-       
-        
     } catch (Exception $e) {
         // echo $e->getMessage();
         // echo $e->getTraceAsString();
@@ -145,8 +142,11 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 <body class="bg-slate-200" x-data="{ feedbackModalShow: false, companyDetailModalShow: false, company: {}, companyHighlights: [], companyHighlightsModalShow: false }">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
-            <a href="/" tabindex="-1">
-                <h1 class="font-bold text-2xl mt-7 text-center">Discover what public companies are working on what problems</h1>
+            <h1 class="font-bold text-2xl mt-7 text-center">
+                <a href="/" tabindex="-1">
+                    Discover what public companies are working on what problems
+                </a>
+            </h1>
             </a>
 
             <form action="" method="get" class="w-full flex justify-center">

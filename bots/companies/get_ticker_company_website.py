@@ -51,7 +51,13 @@ if __name__ == '__main__':
             print("Exiting...")
             exit()
     else: 
-        tickers = cursor.execute('SELECT symbol,clean_name, media_links from stonks WHERE media_links IS NOT NULL or media_links != ""  ORDER BY RANDOM()').fetchall()
+        tickers = cursor.execute('''
+            SELECT symbol,clean_name, media_links 
+            FROM stonks 
+            WHERE (website_url IS NULL OR website_url = '') 
+            AND (media_links IS NOT NULL)
+            ORDER BY RANDOM()
+        ''').fetchall()
 
     if bool(tickers) is False:
         print('No tickers, nothing to do...')

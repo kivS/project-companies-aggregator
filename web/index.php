@@ -145,7 +145,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         <div class="max-w-3xl mx-auto flex flex-col items-center gap-8">
             <h1 class="font-bold text-2xl mt-7 text-center">
                 <a href="/" tabindex="-1">
-                    Discover what public companies are working on what problems
+                    Discover companies by the problems they're working on
                 </a>
             </h1>
             </a>

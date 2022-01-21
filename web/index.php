@@ -499,11 +499,11 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             </div>
         </div>
 
-        <a href="" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-px p-2 hover:scale-105 rounded-t-md bg-white shadow-lg border-2 border-slate-400">
+        <a href="" @click.prevent="feedbackModalShow = true" class="fixed left-5 -bottom-1 p-2 text-lg hover:scale-105 rounded-t-md bg-black text-white shadow-lg border-2 border-slate-500">
             Feedback
 
             <span class="absolute -right-1 -top-1 flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 "></span>
             </span>
         </a>
     </main>

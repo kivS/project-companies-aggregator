@@ -82,6 +82,16 @@ Email: {$email}
     exit();
 }
 
+if ($_SERVER['REQUEST_URI'] == '/feeling-lucky') {
+    $company = $db->querySingle('SELECT * FROM stonks WHERE tags IS NOT NULL AND json_array_length(tags) > 0 ORDER BY random() LIMIT 1', true);
+
+    $tags = json_decode($company['tags']) or [];
+
+    // get a random item from tags array
+    $tag = $tags[array_rand($tags)];
+
+    $_GET['problem'] = $tag;
+}
 
 if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
@@ -158,7 +168,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    <input type="search" x-init="$el.focus()" tabindex="0" minlength="2" name="problem" required autocomplete="off" placeholder="electric cars, cancer, solar, etc..." class="rounded-xl w-full text-center block pl-10">
+                    <input type="search" tabindex="0" minlength="2" name="problem" required autocomplete="off" placeholder="electric cars, cancer, solar, etc..." class="rounded-xl w-full text-center block pl-10">
                 </div>
             </form>
 
@@ -254,6 +264,8 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                     </div>
                 <?php }; ?>
 
+            <?php } else {; ?>
+                <a href="/feeling-lucky" role="button" title="Get a random problem being worked on" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Feeling lucky</a>
             <?php }; ?>
         </div>
 
@@ -503,7 +515,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             Feedback
 
             <span class="absolute -right-1 -top-1 flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 "></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400"></span>
             </span>
         </a>
     </main>

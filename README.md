@@ -2,6 +2,7 @@
 
 # TODO:
 - List of interesting searches on webpage
+- seed companies doing computer vision 
 
 ## Dependencies
 

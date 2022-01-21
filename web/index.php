@@ -161,7 +161,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             </h1>
             </a>
 
-            <form action="" method="get" class="w-full flex justify-center">
+            <form action="/" method="get" class="w-full flex justify-center">
                 <div class="relative w-3/4">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <!-- Heroicon name: solid/search -->

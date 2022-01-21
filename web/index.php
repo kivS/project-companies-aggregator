@@ -158,7 +158,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    <input type="search" tabindex="0" minlength="2" name="problem" required autocomplete="off" placeholder="electric cars, cancer, solar, etc..." class="rounded-xl w-full text-center block pl-10">
+                    <input type="search" x-init="$el.focus()" tabindex="0" minlength="2" name="problem" required autocomplete="off" placeholder="electric cars, cancer, solar, etc..." class="rounded-xl w-full text-center block pl-10">
                 </div>
             </form>
 

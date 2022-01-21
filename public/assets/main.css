@@ -863,6 +863,20 @@ select {
   height: 0.75rem;
 }
 
+.max-h-fit {
+  max-height: -webkit-fit-content;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
+}
+
+.max-h-60 {
+  max-height: 15rem;
+}
+
+.max-h-64 {
+  max-height: 16rem;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1035,8 +1049,16 @@ select {
   place-self: center;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-scroll {
+  overflow: scroll;
 }
 
 .overflow-y-auto {

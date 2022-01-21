@@ -30,6 +30,10 @@ MEDIA_SOURCES = [
         "site_name": "MarketWatch"
     },
     {
+        "site_name": "Hypercharts",
+        "url": "https://hypercharts.co/{symbol}"
+    },
+    {
         "url": "https://www.bloomberg.com/quote/{symbol}:US",
         "site_name": "Bloomberg"
     },
@@ -49,7 +53,7 @@ if __name__ == '__main__':
 
     # update single ticker from command line
     if len(sys.argv) > 1:
-        ticker_symbol = sys.argv[1]
+        ticker_symbol = str(sys.argv[1]).upper()
 
         tickers = cursor.execute(f"SELECT clean_name, symbol FROM stonks WHERE symbol = ? LIMIT 1", (ticker_symbol,)).fetchall()
         print(f"Found {tickers[0]['clean_name']}")

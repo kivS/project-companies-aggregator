@@ -120,7 +120,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         $stmt->bindValue(':user_ip', $_SERVER['REMOTE_ADDR']);
         $stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
         $stmt->bindValue(':nb_hits', $search_results['nbHits']);
-        $stmt->bindValue(':url', PROJECT_URL.'/?problem='. urlencode($_GET['problem']));
+        $stmt->bindValue(':url', PROJECT_URL . '/?problem=' . urlencode($_GET['problem']));
         $stmt->bindValue(':created_at', (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP'));
         $stmt->execute();
     } catch (Exception $e) {
@@ -333,9 +333,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
                                                 </a>
 
                                                 <!-- Flyout menu, show/hide based on flyout menu state. -->
-                                                <div x-show="showLinksMenu" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1" @click.outside="showLinksMenu = false" class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-7 px-2 w-screen max-w-xs sm:px-0">
+                                                <div x-show="showLinksMenu" @click.outside="showLinksMenu = false" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1" class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-7 px-2 w-screen max-w-xs sm:px-0">
                                                     <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                                                        <div class="relative grid gap-6 max-h-64 overflow-scroll bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                                                        <div x-init="$watch('showLinksMenu', isOpen => isOpen && $nextTick(() => $el.scroll(0,0)) )" class="relative grid gap-6 max-h-64 overflow-scroll bg-white px-5 py-6 sm:gap-8 sm:p-8">
                                                             <!-- media links for company -->
                                                             <template x-for="link in company.media_links">
                                                                 <a :href="link.url" class="-m-3 p-3 block rounded-md even:bg-gray-50 hover:bg-gray-100 transition ease-in-out duration-150">

@@ -145,7 +145,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     <title>Discover companies by the problems they're working on</title>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="/assets/main.css">
-    <script defer src="/assets/alpinejs@3.8.0.js"></script>
+    <script defer src="/assets/alpinejs@3.8.0.min.js"></script>
     <?php if (USE_NINJA_ANALYTICS) { ?>
         <script defer data-domain="problemsolvers.kiv.software" src="https://ninja.kiv.software/js/plausible.js"></script>
     <?php }; ?>
@@ -274,7 +274,19 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         <div x-cloak x-show="companyDetailModalShow" @company-detail.window="company = $event.detail" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <!-- Background overlay, show/hide based on modal state.    -->
-                <div x-show="companyDetailModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" aria-hidden="true" class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"></div>
+                <div 
+                    x-show="companyDetailModalShow" 
+                    x-transition:enter="ease-out duration-300" 
+                    x-transition:enter-start="opacity-0" 
+                    x-transition:enter-end="opacity-100" 
+                    x-transition:leave="ease-in duration-200" 
+                    x-transition:leave-start="opacity-100" 
+                    x-transition:leave-end="opacity-0" 
+                    aria-hidden="true" 
+                    class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"
+                ></div>
+
+                            
 
                 <!-- This element is to trick the browser into centering the modal contents. -->
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>

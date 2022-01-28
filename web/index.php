@@ -90,6 +90,8 @@ if ($_SERVER['REQUEST_URI'] == '/feeling-lucky') {
     // get a random item from tags array
     $tag = $tags[array_rand($tags)];
 
+    $is_feeling_lucky_query = true;
+
     $_GET['problem'] = $tag;
 }
 
@@ -123,14 +125,15 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
         // store searched terms in db into user_searches
         $stmt = $db->prepare(
-            'INSERT INTO user_searches (problem, user_ip, user_agent, nb_hits, url, created_at) 
-            VALUES (:problem, :user_ip, :user_agent, :nb_hits, :url, :created_at)'
+            'INSERT INTO user_searches (problem, user_ip, user_agent, nb_hits, url, search_source, created_at) 
+            VALUES (:problem, :user_ip, :user_agent, :nb_hits, :url, :search_source, :created_at)'
         );
         $stmt->bindValue(':problem', $_GET['problem']);
         $stmt->bindValue(':user_ip', $_SERVER['REMOTE_ADDR']);
         $stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT']);
         $stmt->bindValue(':nb_hits', $search_results['nbHits']);
         $stmt->bindValue(':url', PROJECT_URL . '/?problem=' . urlencode($_GET['problem']));
+        $stmt->bindValue(':search_source', isset($is_feeling_lucky_query) ? 'feeling-lucky' : 'search');
         $stmt->bindValue(':created_at', (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:sP'));
         $stmt->execute();
     } catch (Exception $e) {

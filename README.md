@@ -3,6 +3,7 @@
 # TODO:
 - List of interesting searches on webpage
 - seed companies doing computer vision 
+- lazy load more companies
 
 
 ## Dependencies

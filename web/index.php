@@ -107,7 +107,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
             $_GET['search_type'] = 'smart';
         }
 
-        $search = $index->search($search_query, ['limit' => 18, 'attributesToHighlight' => ['tags'], 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol']]);
+        $search = $index->search($search_query, ['limit' => 40, 'attributesToHighlight' => ['tags'], 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol']]);
         $search_results = $search->getRaw();
 
 

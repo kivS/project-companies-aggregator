@@ -184,7 +184,7 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
                     <div class="hidden md:flex absolute inset-y-0 left-0  items-center">
                         <label for="search_type" class="sr-only">Search Type</label>
-                        <select id="search_type" name="search_type" class="focus:ring-gray-500  focus:gray-indigo-500 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
+                        <select id="search_type" name="search_type" class="focus:ring-offset-2 focus:border-hidden h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
                             <option 
                                 title="smart search with similar words, typo correction, synonyms and etc"
                                 value="smart" 

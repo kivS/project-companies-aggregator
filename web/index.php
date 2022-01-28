@@ -97,10 +97,20 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
     try {
         $client = new Client(MEILISEARCH_CLIENT_URL, MEILISEARCH_API_KEY);
         $index = $client->index(MEILISEARCH_APP_INDEX);
-        $search = $index->search($_GET['problem'], ['limit' => 18, 'attributesToHighlight' => ['tags'], 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol']]);
+
+        if (isset($_GET['search_type']) && $_GET['search_type'] == 'exact') {
+            $search_query = '"' . $_GET['problem'] . '"';
+        } else {
+            $search_query = $_GET['problem'];
+            $_GET['search_type'] = 'smart';
+        }
+
+        $search = $index->search($search_query, ['limit' => 18, 'attributesToHighlight' => ['tags'], 'facetsDistribution' => ['tags'], 'matches' => false, 'attributesToRetrieve' => ['company_uid', 'name', 'symbol']]);
         $search_results = $search->getRaw();
 
+
         // header('Content-Type: application/json'); // DEBUG
+        // echo json_encode($_GET);
         // echo json_encode($search_results, JSON_PRETTY_PRINT); // DEBUG
         // exit(); // DEBUG
 
@@ -163,13 +173,34 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
 
             <form action="/" method="get" class="w-full flex justify-center">
                 <div class="relative w-3/4">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <!-- Heroicon name: solid/search -->
+                    <div class="absolute md:hidden inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    <input type="search" tabindex="0" minlength="2" name="problem" required autocomplete="off" placeholder="electric cars, cancer, solar, etc..." class="rounded-xl w-full text-center block pl-10">
+
+                    <div class="hidden md:flex absolute inset-y-0 left-0  items-center">
+                        <label for="search_type" class="sr-only">Search Type</label>
+                        <select id="search_type" name="search_type" class="focus:ring-gray-500  focus:gray-indigo-500 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
+                            <option 
+                                title="smart search with similar words, typo correction, synonyms and etc"
+                                value="smart" 
+                                <?= isset($_GET['search_type']) && $_GET['search_type'] == "smart" ? 'selected' : ''  ?> 
+                                >
+                                Smart Search
+                            </option>
+                            <option 
+                                title="Search exact phrase"
+                                value="exact" 
+                                <?= isset($_GET['search_type']) && $_GET['search_type'] != "smart" ? 'selected' : ''  ?> 
+                                >
+                                Exact Search
+                            </option>
+                        </select>
+                    </div>
+
+                    <input type="search" @focus="$el.select()" value="<?= isset($_GET['problem']) ? $_GET['problem']: '' ?>" tabindex="0" minlength="2" name="problem" required autocomplete="off" placeholder="electric cars, cancer, solar, etc..." class="placeholder:italic rounded-xl w-full text-center block pl-10">
+
                 </div>
             </form>
 
@@ -274,19 +305,9 @@ if (isset($_GET['problem']) &&  strlen($_GET['problem']) > 1) {
         <div x-cloak x-show="companyDetailModalShow" @company-detail.window="company = $event.detail" aria-labelledby="modal-title" role="dialog" aria-modal="true" class=" fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <!-- Background overlay, show/hide based on modal state.    -->
-                <div 
-                    x-show="companyDetailModalShow" 
-                    x-transition:enter="ease-out duration-300" 
-                    x-transition:enter-start="opacity-0" 
-                    x-transition:enter-end="opacity-100" 
-                    x-transition:leave="ease-in duration-200" 
-                    x-transition:leave-start="opacity-100" 
-                    x-transition:leave-end="opacity-0" 
-                    aria-hidden="true" 
-                    class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"
-                ></div>
+                <div x-show="companyDetailModalShow" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" aria-hidden="true" class="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"></div>
 
-                            
+
 
                 <!-- This element is to trick the browser into centering the modal contents. -->
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>

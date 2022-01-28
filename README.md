@@ -1,8 +1,10 @@
 # Discover what companies are working on what problems
 
 # TODO:
+- tune search(maybe a toggle to use phrase search or nomal search?)
 - List of interesting searches on webpage
 - seed companies doing computer vision 
+- search queires should have a source for search/feeling-lucky
 
 ## Dependencies
 

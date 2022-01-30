@@ -97,7 +97,7 @@ description: {description}
 tags:[ 
 '''.strip()
 
-MAX_PROMPT_TOKEN_LENGTH = 2048 # 1 token ~ 4 chars or 1 'hello'
+MAX_PROMPT_TOKEN_LENGTH = 2048 # 1 token ~ 4 chars or 1 'hell'
 
 def get_gpt3_tags(prompt: str):
     response = openai.Completion.create(

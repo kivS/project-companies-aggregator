@@ -5,6 +5,7 @@
     - --skip-filled (optional) - skip tickers that already have tags
 '''
 
+from bdb import Breakpoint
 import sys
 import os
 # root project dir
@@ -13,6 +14,8 @@ from env import * # local env file
 import openai
 import sqlite3
 import json
+import argparse
+import enum
 
 COMPLETION_SEED = '''
 Given the company's name, country, sector, industry and description, generate tags describing what the company does, works in or is trying to solve.
@@ -99,9 +102,17 @@ tags:[
 
 MAX_PROMPT_TOKEN_LENGTH = 2048 # 1 token ~ 4 chars or 1 'hell'
 
-def get_gpt3_tags(prompt: str):
+
+class OpenAiEngines(enum.Enum):
+    davinci = 'text-davinci-001'
+    curie = 'text-curie-001'
+    babbage = 'text-babbage-001'
+    ada = 'text-ada-001'
+
+
+def get_gpt3_tags(prompt: str, engine) -> list:
     response = openai.Completion.create(
-        engine="davinci-instruct-beta-v3",
+        engine=engine,
         prompt= prompt,
         temperature=0.72,
         max_tokens=900,
@@ -128,10 +139,16 @@ if __name__ == '__main__':
     cursor = con.cursor()
     openai.api_key = OPENAI_API_KEY
 
-    skip_filled = False if '--skip-filled' not in sys.argv else True
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--skip_filled', action='store_true', help='skip tickers that already have tags')
+    parser.add_argument('--engine', default=OpenAiEngines.babbage.value, choices=OpenAiEngines._member_map_.keys())
+    parser.add_argument('ticker_symbol', nargs='?')
+    args = parser.parse_args()
 
-    if len(sys.argv) > 1:
-        ticker_symbol = sys.argv[1]
+    if args.ticker_symbol:
+        ticker_symbol = args.ticker_symbol
+        skip_filled = args.skip_filled
+        engine = args.engine
 
         ticker = cursor.execute('''
             SELECT *
@@ -182,7 +199,7 @@ if __name__ == '__main__':
             )
 
         try:
-            result = get_gpt3_tags(completion_prompt)
+            result = get_gpt3_tags(completion_prompt, engine)
         except Exception as e:
             print(f"Failed to get gpt-3 completion for: {ticker['symbol']} | Error: {e}")
             sys.exit(1)

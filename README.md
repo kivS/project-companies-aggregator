@@ -1,6 +1,6 @@
 # Discover what companies are working on what problems
 
-# TODO:
+## TODO:
 - List of interesting searches on webpage
 - seed companies doing computer vision 
 - lazy load more companies
@@ -102,7 +102,7 @@ echo '
 ```
 
 - Choose fields that can be sortable:
-``bash
+```bash
 # httpie
 echo '["name", "symbol"]' | http POST :7700/indexes/companies-aggregator/settings/sortable-attributes  X-MEILI-API-KEY:$MEILI_MASTER_KEY  -v
 ```

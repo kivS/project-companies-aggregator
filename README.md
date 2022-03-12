@@ -53,10 +53,11 @@ python -m pip install -r requirements.txt
 
 - create a local dev ssl certificate
 
-```bash
-mkcert -cert-file fullchain.pem -key-file privkey.pem companies-aggregator.local
-```
+    ```bash
+    mkcert -cert-file fullchain.pem -key-file privkey.pem companies-aggregator.local
+    ```
 
+- duplicate and fill the env files: `.env.template.php` and `env.template.py`
 
 - Download all the public listed companies csv file and save it as stocks.csv:  https://www.nasdaq.com/market-activity/stocks/screener
 

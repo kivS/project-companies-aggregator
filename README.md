@@ -47,6 +47,16 @@
 python -m pip install -r requirements.txt 
 ```
 
+- create a dynamic link of `nginx.conf` to `/etc/nginx/sites-available/`
+
+- add `companies-aggregator.local` to the `/etc/hosts` file.
+
+- create a local dev ssl certificate
+
+```bash
+mkcert -cert-file fullchain.pem -key-file privkey.pem companies-aggregator.local
+```
+
 
 - Download all the public listed companies csv file and save it as stocks.csv:  https://www.nasdaq.com/market-activity/stocks/screener
 

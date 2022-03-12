@@ -7,3 +7,5 @@ tailwind
 node_modules/
 python_venv/
 __pycache__/
+fullchain.pem
+privkey.pem

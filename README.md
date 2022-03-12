@@ -22,19 +22,30 @@
 
 ## Instructions
 
-### Python Bots
+- Install _php composer_ dependencies in `web` folder
 
-- create virtual environment
-```bash
-# in project folder
-python -m venv python_venv
-```
+    ```bash
+    composer install
+    ```
+
+
+- Install _pyenv_ virtualenv:
+
+    ```bash
+    # in root folder
+    pyenv virtualenv 3.10.2 companies-aggregator-3.10.2-env  
+    ```
+
+- Activate virtualenv:
+
+    ```bash 
+    pyenv activate companies-aggregator-3.10.2-env
+    ```
 
 - Install dependencies
 ```bash
-./python_venv/bin/python -m pip install -r requirements.txt 
+python -m pip install -r requirements.txt 
 ```
-
 
 
 - Download all the public listed companies csv file and save it as stocks.csv:  https://www.nasdaq.com/market-activity/stocks/screener
